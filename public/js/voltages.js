@@ -4,12 +4,22 @@ const form = document.forms['voltagesForm'];
 const chartCanvas = document.getElementById('voltages');
 const spanLoading = document.getElementById('spanLoading');
 const chartLoading = document.getElementById('chartLoading');
+const referencesButton = document.getElementById('references');
 
-async function getVoltages(startDate, endDate) {
-    const voltages = await fetch('/api' + `?startDate=${startDate}&endDate=${endDate}`, {
+async function getVoltages(data, startDate, endDate) {
+    createLoading();
+    const voltages = await fetch('/api' + `?data=${data}&startDate=${startDate}&endDate=${endDate}`, {
         method: 'GET',
         headers: { 'Accept': 'application/json' }
-    }).then(res => res.json());
+    }).then(res => {
+        if (res.ok) {
+            return res.json();
+        }
+        throw new Error('Cannot fetch request!');
+    }).catch(error => {
+        console.log(error.message);
+    });
+    destroyLoading();
     return await voltages;
 }
 
@@ -26,6 +36,23 @@ async function createChart(voltages, data) {
                         data: voltages.map(row => row[data]),
                     }
                 ]
+            },
+            options: {
+                plugins: {
+                    zoom: {
+                        zoom: {
+                            wheel: {
+                                enabled: true,
+                            },
+                            pinch: {
+                                enabled: true,
+                            },
+                            mode: 'xy',
+                        }
+                    }
+                },
+                animation: false,
+                spanGaps: true,
             }
         }
     );
@@ -38,17 +65,13 @@ function destroyChartIfExsists() {
 }
 
 function createLoading() {
-    spanLoading.classList.add('spinner-border');
-    spanLoading.classList.add('spinner-border-sm');
-    chartLoading.classList.add('spinner-border');
-    chartLoading.classList.add('text-muted');
+    spanLoading.classList.add('spinner-grow', 'spinner-grow-sm');
+    chartLoading.classList.add('spinner-grow', 'text-muted');
 }
 
 function destroyLoading() {
-    spanLoading.classList.remove('spinner-border');
-    spanLoading.classList.remove('spinner-border-sm');
-    chartLoading.classList.remove('spinner-border');
-    chartLoading.classList.remove('text-muted');
+    spanLoading.classList.remove('spinner-grow', 'spinner-grow-sm');
+    chartLoading.classList.remove('spinner-grow', 'text-muted');
 }
 
 function dataType(data) {
@@ -64,9 +87,7 @@ form.addEventListener('submit', (async e => {
     const startDate =  form.elements['startDate'].value;
     const endDate = form.elements['endDate'].value;
     destroyChartIfExsists();
-    createLoading();
     createChart(
-        await getVoltages(startDate, endDate), 
+        await getVoltages(data, startDate, endDate), 
         data);
-    destroyLoading();
 }));
