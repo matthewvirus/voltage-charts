@@ -14,7 +14,7 @@ app.use(
     express.static(path.join(__dirname, 'node_modules/bootstrap/dist/'))
 );
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
-app.use(serveFavicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
+app.use(serveFavicon(path.join(__dirname, 'public/images/favicon.ico')));
 
 app.get('/api', router);
 
