@@ -16,7 +16,7 @@ app.use(
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 app.use(serveFavicon(path.join(__dirname, 'public/images/favicon.ico')));
 
-app.get('/api', router);
+app.get('/api/voltages', router);
 
 app.get('/', function (_, res) {
     res.sendFile(__dirname + '/index.html');
