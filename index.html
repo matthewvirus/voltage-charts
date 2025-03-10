@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="container">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
                 <img class="bi me-2" src="http://localhost:8080/images/charts.png" width="50" height="50">
@@ -51,13 +51,20 @@
                                 <input type="radio" id="v24" name="data" value="v_24" class="form-check-input" />
                                 <label for="v24" class="form-label">24 V</label>
                             </div>
-                        </fieldset><br>
+                        </fieldset>
+                        <div class="mb-3">
+                            <label for="editable">SQL query like:</label>
+                            <input id="editable" type="text" class="form-control">
+                        </div>
                         <button type="submit" name="getChart" class="btn btn-outline-primary">
                             <span id="spanLoading"></span>
                             Get chart
                         </button>
                         <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#refModal">
                             References
+                        </button>
+                        <button id="resetChart" type="button" class="btn btn-outline-primary mt-2" style="visibility: hidden;">
+                            Reset zoom
                         </button>
                     </form>
                 </div>
