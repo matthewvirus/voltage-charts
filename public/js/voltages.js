@@ -6,6 +6,12 @@ const dataStringsJSON = {
     'v_24': '24 Volts line'
 };
 const dataOutputsJSON = {
+    'v_magnetic': 0.1,
+    'v_piezo': 0.57,
+    'v_12': 0.555,
+    'v_24': 4.536
+};
+const dataOutputsIfStringExistsJSON = {
     'v_magnetic': 0.102,
     'v_piezo': 0.6,
     'v_12': 0.56,
@@ -58,9 +64,8 @@ async function createChart(voltages, data, editable) {
                         type: 'line',
                         label: `Oper stat: ${editable}`,
                         data: voltages.map((row) => {
-                            if ((row.msg !='Nothing' && row.msg.toLowerCase().includes(editable.toLowerCase()))) {
-                                console.log(row.msg);
-                                return row.msg = dataOutputsJSON[data];
+                            if ((row.msg != 'Nothing')) {
+                                return row.msg.toLowerCase().includes(editable.toLowerCase()) ? row.msg =  dataOutputsIfStringExistsJSON[data] : row.msg = dataOutputsJSON[data];
                             }
                         }),
                     }
