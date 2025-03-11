@@ -1,34 +1,8 @@
-const formatter = 'YYYY-MM-DD HH:mm:ss';
-const dataStringsJSON = {
-    'v_magnetic': 'Antenne',
-    'v_piezo': 'Piezo',
-    'v_12': '12 Volts line',
-    'v_24': '24 Volts line'
-};
-const dataOutputsJSON = {
-    'v_magnetic': 0.1,
-    'v_piezo': 0.57,
-    'v_12': 0.555,
-    'v_24': 4.536
-};
-const dataOutputsIfStringExistsJSON = {
-    'v_magnetic': 0.102,
-    'v_piezo': 0.6,
-    'v_12': 0.56,
-    'v_24': 4.537
-};
-const dataMinAxeJSON = {
-    'v_magnetic': 0.092,
-    'v_piezo': 0.518,
-    'v_12': 0.528,
-    'v_24': 4.533
-};
-
+import utils from './utils.js';
 const form = document.forms['voltagesForm'];
 const chartCanvas = document.getElementById('voltages');
 const spanLoading = document.getElementById('spanLoading');
 const chartLoading = document.getElementById('chartLoading');
-const referencesButton = document.getElementById('references');
 const resetChartButton = document.getElementById('resetChart');
 
 async function getVoltages(data, startDate, endDate, editable) {
@@ -53,11 +27,11 @@ async function createChart(voltages, data, editable) {
         chartCanvas,
         {
             data: {
-                labels: voltages.map(row => moment.unix(Date.parse(row.hwtime)/1000).format(formatter)),
+                labels: voltages.map(row => moment.unix(Date.parse(row.hwtime)/1000).format(utils.formatter)),
                 datasets: [
                     {
                         type: 'line',
-                        label: dataStringsJSON[data],
+                        label: utils.dataStringsJSON[data],
                         data: voltages.map(row => row[data]),
                     },
                     {
@@ -65,7 +39,7 @@ async function createChart(voltages, data, editable) {
                         label: `Oper stat: ${editable}`,
                         data: voltages.map((row) => {
                             if ((row.msg != 'Nothing')) {
-                                return row.msg.toLowerCase().includes(editable.toLowerCase()) ? row.msg =  dataOutputsIfStringExistsJSON[data] : row.msg = dataOutputsJSON[data];
+                                return row.msg.toLowerCase().includes(editable.toLowerCase()) ? row.msg =  utils.dataOutputsIfStringExistsJSON[data] : row.msg = utils.dataOutputsJSON[data];
                             }
                         }),
                     }
@@ -90,7 +64,7 @@ async function createChart(voltages, data, editable) {
                 spanGaps: true,
                 scales: {
                     y: {
-                        min: dataMinAxeJSON[data]
+                        min: utils.dataMinAxeJSON[data]
                     }
                 }
             }
